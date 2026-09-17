@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Delete Donor Profile{% endblock %}
+{% block content %}
+<h1 class="section-title">Delete Donor Profile</h1>
+<div class="card" style="max-width:480px;">
+    <p>Are you sure you want to delete the donor profile for <strong>{{ donor.name }}</strong>? This cannot be undone.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="actions-row">
+            <button type="submit" class="btn btn-danger">Yes, delete it</button>
+            <a class="btn btn-secondary" href="{% url 'donor_detail' donor.pk %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

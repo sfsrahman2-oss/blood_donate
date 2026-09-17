@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Home - Blood Donate & Request{% endblock %}
+{% block content %}
+<div class="hero">
+    <h1>Blood Donate &amp; Request</h1>
+    <p>"Find a donor. Save a life."</p>
+    <div class="quick-actions">
+        <a class="btn" href="{% url 'donor_list' %}">Find Blood Donor</a>
+        <a class="btn" href="{% url 'request_create' %}">Request Blood</a>
+        <a class="btn" href="{% url 'donor_create' %}">Become a Donor</a>
+        <a class="btn" href="{% url 'request_list' %}">View Blood Requests</a>
+    </div>
+</div>
+
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-number">{{ donor_count }}</div>
+        <div class="muted">Available Donors</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ pending_requests }}</div>
+        <div class="muted">Pending Requests</div>
+    </div>
+</div>
+
+<h2 class="section-title">Recent Blood Requests</h2>
+{% if latest_requests %}
+    <div class="grid">
+        {% for req in latest_requests %}
+            <div class="card">
+                <span class="badge badge-blood">{{ req.blood_group }}</span>
+                <h3><a href="{% url 'request_detail' req.pk %}">{{ req.patient_name }}</a></h3>
+                <p class="muted">{{ req.hospital_name }} &middot; {{ req.hospital_location }}</p>
+                <p class="muted">Required by {{ req.required_date }}</p>
+                <span class="badge badge-{{ req.status }}">{{ req.get_status_display }}</span>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="empty-state">No active blood requests right now.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ donor.name }} - Donor Profile{% endblock %}
+{% block content %}
+<h1 class="section-title">{{ donor.name }}</h1>
+<div class="card" style="max-width:560px;">
+    <span class="badge badge-blood">{{ donor.blood_group }}</span>
+    <span class="badge badge-{{ donor.availability }}">{{ donor.get_availability_display }}</span>
+    <table class="detail-table" style="margin-top:14px;">
+        <tr><td>Location</td><td>{{ donor.location }}</td></tr>
+        <tr><td>Contact Number</td><td>{{ donor.phone_number }}</td></tr>
+        <tr><td>Last Donation Date</td><td>{{ donor.last_donation_date|default:"Not specified" }}</td></tr>
+        <tr><td>Description</td><td>{{ donor.description|default:"-" }}</td></tr>
+    </table>
+    {% if user == donor.user %}
+        <div class="actions-row">
+            <a class="btn btn-primary btn-small" href="{% url 'donor_edit' %}">Edit</a>
+            <a class="btn btn-danger btn-small" href="{% url 'donor_delete' donor.pk %}">Delete</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

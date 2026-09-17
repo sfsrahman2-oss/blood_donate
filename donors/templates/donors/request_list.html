@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Blood Requests{% endblock %}
+{% block content %}
+<h1 class="section-title">Active Blood Requests</h1>
+
+<form method="get" class="filter-form">
+    {% for field in form %}
+        <div class="field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary btn-small">Filter</button>
+    <a href="{% url 'request_list' %}" class="btn btn-secondary btn-small">Reset</a>
+</form>
+
+{% if page_obj %}
+    <div class="grid">
+        {% for req in page_obj %}
+            <div class="card">
+                <span class="badge badge-blood">{{ req.blood_group }}</span>
+                <span class="badge badge-{{ req.status }}">{{ req.get_status_display }}</span>
+                <h3><a href="{% url 'request_detail' req.pk %}">{{ req.patient_name }}</a></h3>
+                <p class="muted">{{ req.hospital_name }} &middot; {{ req.hospital_location }}</p>
+                <p class="muted">Needed by {{ req.required_date }} &middot; {{ req.bags_required }} bag(s)</p>
+                <p class="muted">Contact: {{ req.contact_number }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?{% if form.blood_group.value %}blood_group={{ form.blood_group.value }}&{% endif %}{% if form.location.value %}location={{ form.location.value }}&{% endif %}{% if form.status.value %}status={{ form.status.value }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?{% if form.blood_group.value %}blood_group={{ form.blood_group.value }}&{% endif %}{% if form.location.value %}location={{ form.location.value }}&{% endif %}{% if form.status.value %}status={{ form.status.value }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+{% else %}
+    <p class="empty-state">No blood requests found.</p>
+{% endif %}
+{% endblock %}

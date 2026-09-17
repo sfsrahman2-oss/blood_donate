@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}My Requests{% endblock %}
+{% block content %}
+<h1 class="section-title">My Blood Requests</h1>
+<a class="btn btn-primary btn-small" href="{% url 'request_create' %}" style="margin-bottom:16px;display:inline-block;">+ New Request</a>
+
+{% if requests %}
+    <div class="grid">
+        {% for req in requests %}
+            <div class="card">
+                <span class="badge badge-blood">{{ req.blood_group }}</span>
+                <span class="badge badge-{{ req.status }}">{{ req.get_status_display }}</span>
+                <h3><a href="{% url 'request_detail' req.pk %}">{{ req.patient_name }}</a></h3>
+                <p class="muted">{{ req.hospital_name }} &middot; {{ req.hospital_location }}</p>
+                <p class="muted">Needed by {{ req.required_date }}</p>
+                <div class="actions-row">
+                    <a class="btn btn-secondary btn-small" href="{% url 'request_edit' req.pk %}">Edit</a>
+                    <a class="btn btn-danger btn-small" href="{% url 'request_delete' req.pk %}">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="empty-state">You haven't created any blood requests yet.</p>
+{% endif %}
+{% endblock %}

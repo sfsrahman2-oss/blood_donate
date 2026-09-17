@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ req.patient_name }} - Blood Request{% endblock %}
+{% block content %}
+<h1 class="section-title">Blood Request Details</h1>
+<div class="card" style="max-width:560px;">
+    <span class="badge badge-blood">{{ req.blood_group }}</span>
+    <span class="badge badge-{{ req.status }}">{{ req.get_status_display }}</span>
+    <table class="detail-table" style="margin-top:14px;">
+        <tr><td>Patient</td><td>{{ req.patient_name }}</td></tr>
+        <tr><td>Hospital</td><td>{{ req.hospital_name }}</td></tr>
+        <tr><td>Location</td><td>{{ req.hospital_location }}</td></tr>
+        <tr><td>Required Date</td><td>{{ req.required_date }}</td></tr>
+        <tr><td>Bags Required</td><td>{{ req.bags_required }}</td></tr>
+        <tr><td>Contact</td><td>{{ req.contact_number }}</td></tr>
+        <tr><td>Reason / Description</td><td>{{ req.description|default:"-" }}</td></tr>
+        <tr><td>Posted By</td><td>{{ req.requester.get_full_name|default:req.requester.username }}</td></tr>
+    </table>
+    {% if user == req.requester %}
+        <div class="actions-row">
+            <a class="btn btn-primary btn-small" href="{% url 'request_edit' req.pk %}">Edit</a>
+            <a class="btn btn-danger btn-small" href="{% url 'request_delete' req.pk %}">Delete</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Find Donors{% endblock %}
+{% block content %}
+<h1 class="section-title">Find Blood Donors</h1>
+
+<form method="get" class="filter-form">
+    {% for field in form %}
+        <div class="field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary btn-small">Search</button>
+    <a href="{% url 'donor_list' %}" class="btn btn-secondary btn-small">Reset</a>
+</form>
+
+{% if page_obj %}
+    <div class="grid">
+        {% for donor in page_obj %}
+            <div class="card">
+                <span class="badge badge-blood">{{ donor.blood_group }}</span>
+                <span class="badge badge-{{ donor.availability }}">{{ donor.get_availability_display }}</span>
+                <h3><a href="{% url 'donor_detail' donor.pk %}">{{ donor.name }}</a></h3>
+                <p class="muted">{{ donor.location }}</p>
+                {% if donor.last_donation_date %}
+                    <p class="muted">Last donated: {{ donor.last_donation_date }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?{% if form.blood_group.value %}blood_group={{ form.blood_group.value }}&{% endif %}{% if form.location.value %}location={{ form.location.value }}&{% endif %}{% if form.availability.value %}availability={{ form.availability.value }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?{% if form.blood_group.value %}blood_group={{ form.blood_group.value }}&{% endif %}{% if form.location.value %}location={{ form.location.value }}&{% endif %}{% if form.availability.value %}availability={{ form.availability.value }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+{% else %}
+    <p class="empty-state">No donors found matching your criteria.</p>
+{% endif %}
+{% endblock %}

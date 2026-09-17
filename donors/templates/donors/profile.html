@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<h1 class="section-title">My Profile</h1>
+<div class="card" style="max-width:560px;">
+    {% if profile.profile_picture %}
+        <img src="{{ profile.profile_picture.url }}" alt="Profile picture" style="width:100px;height:100px;border-radius:50%;object-fit:cover;margin-bottom:14px;">
+    {% endif %}
+    <table class="detail-table">
+        <tr><td>Full Name</td><td>{{ user.get_full_name|default:user.username }}</td></tr>
+        <tr><td>Username</td><td>{{ user.username }}</td></tr>
+        <tr><td>Email</td><td>{{ user.email }}</td></tr>
+        <tr><td>Phone Number</td><td>{{ profile.phone_number|default:"-" }}</td></tr>
+        <tr><td>Blood Group</td><td>{{ profile.blood_group|default:"-" }}</td></tr>
+        <tr><td>Location</td><td>{{ profile.location|default:"-" }}</td></tr>
+        <tr><td>Date of Birth</td><td>{{ profile.date_of_birth|default:"-" }}</td></tr>
+    </table>
+    <div class="actions-row">
+        <a class="btn btn-primary btn-small" href="{% url 'profile_edit' %}">Update Profile</a>
+        {% if user.donor_profile %}
+            <a class="btn btn-secondary btn-small" href="{% url 'donor_edit' %}">Manage Donor Profile</a>
+        {% else %}
+            <a class="btn btn-secondary btn-small" href="{% url 'donor_create' %}">Become a Donor</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
